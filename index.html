@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis FDP Mastery: Pecahan, Desimal & Persen</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- MathJax Configuration for perfect LaTeX rendering -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #F8FAFC;
+        }
+        .heading-font {
+            font-family: 'Fredoka', sans-serif;
+        }
+        .math-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-tr from-[#EFF6FF] via-[#F8FAFC] to-[#F0FDFA] min-h-screen flex flex-col justify-between overflow-x-hidden select-none">
+
+    <!-- TOP HEADER -->
+    <header class="bg-white/95 backdrop-blur-md border-b-4 border-teal-600 py-3.5 px-6 flex justify-between items-center sticky top-0 z-40 shadow-sm">
+        <div class="flex items-center gap-3">
+            <span class="text-3xl animate-bounce">⚡</span>
+            <div>
+                <h1 class="heading-font text-xl md:text-2xl font-bold text-teal-950">Lab FDP: Challenge 40</h1>
+                <p class="text-[10px] text-teal-600 font-extrabold tracking-wider uppercase">Uji Pemahaman Konseptual & Soal Cerita</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-2.5">
+            <!-- Streak Badge -->
+            <div id="streak-badge" class="hidden bg-orange-50 border-2 border-orange-400 rounded-full px-3 py-1 flex items-center gap-1 shadow-sm">
+                <span class="text-xs">🔥</span>
+                <span id="streak-count" class="font-bold text-orange-700 text-xs">0</span>
+            </div>
+            <!-- XP Score Badge -->
+            <div class="bg-teal-50 border-2 border-teal-300 rounded-full px-3.5 py-1 flex items-center gap-1.5 shadow-sm">
+                <span class="text-xs">💎</span>
+                <span id="score-display" class="font-extrabold text-teal-700 text-xs md:text-sm">0 XP</span>
+            </div>
+            <!-- Scratchpad Toggle -->
+            <button onclick="toggleScratchpad()" class="bg-amber-50 hover:bg-amber-100 border-2 border-amber-400 active:scale-95 transition text-amber-800 font-bold rounded-full px-3 py-1 text-xs md:text-sm shadow-sm flex items-center gap-1">
+                ✏️ <span class="hidden sm:inline">Papan Cakar</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- SCRATCHPAD DRAWING PANEL (Papan Cakar Aljabar) -->
+    <div id="scratchpad" class="hidden fixed inset-0 z-50 bg-white/95 flex flex-col p-4">
+        <div class="flex justify-between items-center mb-3 border-b-2 border-gray-100 pb-2">
+            <div class="flex items-center gap-2">
+                <span class="text-xl">✏️</span>
+                <h3 class="heading-font text-lg font-bold text-slate-800">Papan Cakar Perhitungan FDP</h3>
+            </div>
+            <div class="flex items-center gap-2">
+                <!-- Color pickers -->
+                <button onclick="setCanvasColor('#000000')" class="w-6 h-6 rounded-full bg-black border-2 border-white ring-2 ring-black/10"></button>
+                <button onclick="setCanvasColor('#0d9488')" class="w-6 h-6 rounded-full bg-teal-600 border-2 border-white ring-2 ring-black/10"></button>
+                <button onclick="setCanvasColor('#dc2626')" class="w-6 h-6 rounded-full bg-red-600 border-2 border-white ring-2 ring-black/10"></button>
+                <button onclick="setCanvasColor('#2563eb')" class="w-6 h-6 rounded-full bg-blue-600 border-2 border-white ring-2 ring-black/10"></button>
+                <span class="mx-1 text-gray-300">|</span>
+                <button onclick="clearCanvas()" class="bg-red-50 hover:bg-red-100 text-red-600 font-bold px-3 py-1.5 rounded-xl text-xs transition">Hapus</button>
+                <button onclick="toggleScratchpad()" class="bg-teal-600 hover:bg-teal-700 text-white font-bold px-4 py-1.5 rounded-xl text-xs transition">Selesai Mencakar</button>
+            </div>
+        </div>
+        <div class="flex-1 bg-[#FAFDFB] border-4 border-dashed border-teal-300 rounded-2xl relative cursor-crosshair overflow-hidden">
+            <canvas id="scratch-canvas" class="absolute inset-0 w-full h-full"></canvas>
+        </div>
+        <p class="text-xs text-slate-400 mt-2 text-center">Gunakan jarimu atau pointer mouse untuk menghitung coretan atau menyamakan KPK penyebut di atas!</p>
+    </div>
+
+    <!-- MAIN INTERACTIVE PORTAL -->
+    <main id="game-portal" class="flex-1 flex items-center justify-center p-4 relative my-3">
+        
+        <!-- INTRO SCREEN / DASHBOARD -->
+        <div id="intro-screen" class="w-full max-w-3xl bg-white rounded-3xl border-8 border-teal-100 shadow-xl p-6 md:p-10 text-center animate-fade-in">
+            <span class="text-6xl mb-4 block">📈🎓</span>
+            <h2 class="heading-font text-3xl md:text-5xl font-extrabold text-slate-800 mb-2">Mastery Kuis FDP</h2>
+            <p class="text-sm md:text-base text-slate-500 font-medium max-w-md mx-auto mb-8">
+                Asah kelihaian aljabar pecahan, desimal, dan persentase kamu melalui 40 soal tantangan komprehensif!
+            </p>
+
+            <div class="bg-teal-50/50 rounded-2xl p-5 mb-8 text-left border border-teal-100">
+                <h3 class="font-bold text-teal-950 mb-2.5 text-sm md:text-base flex items-center gap-2">🛡️ Pilih Misi Belajarmu:</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 text-xs md:text-sm">
+                    <div onclick="startQuiz('langsung')" class="bg-white hover:bg-teal-50 p-4 rounded-xl border-2 border-teal-100 hover:border-teal-500 cursor-pointer transition shadow-sm hover:shadow flex flex-col justify-between">
+                        <div>
+                            <span class="text-lg">⚡</span>
+                            <h4 class="font-bold text-slate-800 mt-1">20 Aljabar Langsung</h4>
+                            <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">Penyederhanaan pecahan kompleks bertingkat, pecahan tak berhingga, dan aritmetika desimal.</p>
+                        </div>
+                        <span class="text-[10px] font-black text-teal-600 uppercase mt-4 block">Mulai Soal Langsung →</span>
+                    </div>
+                    <div onclick="startQuiz('cerita')" class="bg-white hover:bg-amber-50 p-4 rounded-xl border-2 border-teal-100 hover:border-amber-400 cursor-pointer transition shadow-sm hover:shadow flex flex-col justify-between">
+                        <div>
+                            <span class="text-lg">📖</span>
+                            <h4 class="font-bold text-slate-800 mt-1">20 Soal Cerita</h4>
+                            <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">Kasus susutan nilai, pembagian sisa berantai, diskon kumulatif, laju kerja, dan larutan kimia.</p>
+                        </div>
+                        <span class="text-[10px] font-black text-amber-600 uppercase mt-4 block">Mulai Soal Cerita →</span>
+                    </div>
+                    <div onclick="startQuiz('marathon')" class="bg-gradient-to-br from-teal-900 to-slate-950 hover:from-teal-950 p-4 rounded-xl text-white cursor-pointer transition shadow-lg flex flex-col justify-between">
+                        <div>
+                            <span class="text-lg">🔥</span>
+                            <h4 class="font-extrabold text-white mt-1">Marathon Akbar</h4>
+                            <p class="text-[11px] text-teal-200 mt-1 leading-relaxed">Taklukkan seluruh 40 pertanyaan berturut-turut untuk meraih medali kehormatan *FDP Grandmaster*.</p>
+                        </div>
+                        <span class="text-[10px] font-black text-amber-400 uppercase mt-4 block">Mulai Marathon →</span>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="text-[11px] text-slate-400 font-bold italic">Disarankan menggunakan tombol "Papan Cakar" di sudut kanan atas untuk menghitung pecahan kompleks!</p>
+        </div>
+
+        <!-- QUIZ SCREEN WITH SIDE NAVIGATION PANEL -->
+        <div id="quiz-screen" class="hidden w-full max-w-5xl bg-white rounded-3xl border-8 border-teal-100 shadow-xl overflow-hidden flex flex-col md:flex-row min-h-[500px] md:min-h-[580px]">
+            
+            <!-- Left Side: Navigation Panel -->
+            <div class="w-full md:w-64 bg-slate-50 border-b md:border-b-0 md:border-r border-slate-100 p-4 flex flex-col justify-between">
+                <div>
+                    <h3 class="heading-font text-sm font-bold text-slate-700 mb-3 flex items-center gap-1.5">
+                        <span>🧭</span> Peta Tantangan
+                    </h3>
+                    <!-- Scrollable Grid of Question numbers -->
+                    <div id="nav-grid" class="grid grid-cols-8 sm:grid-cols-10 md:grid-cols-4 lg:grid-cols-5 gap-2 max-h-[120px] md:max-h-[380px] overflow-y-auto pr-1 custom-scrollbar">
+                        <!-- Navigation buttons injected here dynamically -->
+                    </div>
+                </div>
+                <!-- Mini Stats Progress in Sidebar -->
+                <div class="mt-4 pt-3 border-t border-slate-200 hidden md:block">
+                    <div class="flex justify-between text-[11px] font-bold text-slate-500 mb-1">
+                        <span>Progres Dijawab:</span>
+                        <span id="stat-answered-count">0 / 20</span>
+                    </div>
+                    <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+                        <div id="stat-answered-progress" class="bg-emerald-500 h-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Main Quiz Area -->
+            <div class="flex-1 flex flex-col justify-between">
+                <!-- Progress Bar -->
+                <div class="w-full bg-slate-100 h-3">
+                    <div id="progress-bar" class="bg-teal-600 h-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+
+                <div class="p-5 md:p-8 flex-1 flex flex-col justify-between custom-scrollbar overflow-y-auto max-h-[460px] md:max-h-[500px]">
+                    <div>
+                        <!-- Meta info & Difficulty Pill -->
+                        <div class="flex justify-between items-center mb-4">
+                            <span id="question-index" class="text-xs font-extrabold text-teal-600 uppercase tracking-widest">SOAL 1 / 20</span>
+                            <span id="difficulty-badge" class="px-3 py-1 rounded-full text-[10px] font-black uppercase shadow-sm">SEDANG</span>
+                        </div>
+
+                        <!-- Question Container -->
+                        <div class="mb-6">
+                            <div id="question-text" class="text-slate-800 font-bold text-sm md:text-base leading-relaxed">
+                                <!-- Injected by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Answer options -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6" id="options-grid">
+                        <!-- Injected by JS -->
+                    </div>
+
+                    <!-- Explanation Area (Initially Hidden) -->
+                    <div id="explanation-box" class="hidden bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-r-xl mb-4 text-xs md:text-sm animate-fade-in">
+                        <h4 class="font-bold text-emerald-900 mb-1 flex items-center gap-1">💡 Analisis Solusi Logis:</h4>
+                        <div id="explanation-text" class="text-emerald-800 font-medium leading-relaxed">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Footer Navigation Buttons inside Slide -->
+                    <div class="flex justify-end pt-3 border-t border-slate-100">
+                        <button id="next-btn" onclick="nextQuestion()" class="hidden bg-teal-600 hover:bg-teal-700 text-white font-extrabold px-6 py-2.5 rounded-xl transition shadow active:scale-95 flex items-center gap-1.5 text-xs md:text-sm">
+                            Lanjutkan <span>👉</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Global Navigation Footer Status -->
+                <div class="bg-slate-50 border-t border-slate-100 px-6 py-3 flex justify-between items-center text-xs font-bold text-slate-500">
+                    <span id="section-name">Mode: Aljabar Langsung</span>
+                    <span id="score-streak-helper" class="text-teal-600 font-extrabold">+15 XP per Jawaban Benar</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RESULTS SCREEN -->
+        <div id="results-screen" class="hidden w-full max-w-2xl bg-white rounded-3xl border-8 border-teal-100 shadow-xl p-8 text-center animate-fade-in">
+            <span class="text-7xl block mb-4 animate-bounce" id="result-emoji">🏆</span>
+            <h2 class="heading-font text-3xl md:text-4xl font-extrabold text-slate-800 mb-1" id="result-title">Kategori Selesai!</h2>
+            <p class="text-xs md:text-sm text-slate-500 max-w-md mx-auto mb-6" id="result-message">Selamat, petualangan belajarmu selesai. Berikut adalah statistik pencapaian belajarmu:</p>
+
+            <div class="grid grid-cols-3 gap-4 max-w-md mx-auto mb-8 text-slate-800">
+                <div class="bg-teal-50/50 rounded-2xl p-4 border border-teal-100">
+                    <p class="text-[10px] font-black text-teal-600 uppercase tracking-wider">Benar</p>
+                    <h3 id="stat-correct" class="font-extrabold text-xl md:text-2xl text-teal-900 mt-1">0</h3>
+                </div>
+                <div class="bg-emerald-50/50 rounded-2xl p-4 border border-emerald-100">
+                    <p class="text-[10px] font-black text-emerald-600 uppercase tracking-wider">Akurasi</p>
+                    <h3 id="stat-accuracy" class="font-extrabold text-xl md:text-2xl text-teal-950 mt-1">0%</h3>
+                </div>
+                <div class="bg-amber-50/50 rounded-2xl p-4 border border-amber-100">
+                    <p class="text-[10px] font-black text-amber-600 uppercase tracking-wider">XP Diperoleh</p>
+                    <h3 id="stat-xp" class="font-extrabold text-xl md:text-2xl text-amber-950 mt-1">0</h3>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-center gap-3">
+                <div onclick="resetPortal()" class="bg-teal-600 hover:bg-teal-700 text-white font-extrabold px-6 py-3 rounded-2xl shadow-md cursor-pointer transition transform hover:scale-[1.02] text-xs md:text-sm">
+                    🔄 Pilih Misi Lain
+                </div>
+                <div onclick="reviewIncorrectQuestions()" id="review-btn" class="hidden bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold px-6 py-3 rounded-2xl cursor-pointer transition text-xs md:text-sm">
+                    🔎 Pelajari Kesalahan
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FLOATING TOAST NOTIFICATION -->
+    <div id="toast" class="hidden fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 text-white font-bold px-6 py-3 rounded-2xl shadow-xl flex items-center gap-2 animate-bounce">
+        <span id="toast-icon">✨</span> <span id="toast-text">Tepat sekali!</span>
+    </div>
+
+    <!-- CONFETTI CANVAS -->
+    <canvas id="confetti" class="fixed inset-0 pointer-events-none z-50 w-full h-full hidden"></canvas>
+
+    <script>
+        // --- 1. WEB AUDIO API SYNTHESIZER ---
+        let audioCtx;
+        function getAudioContext() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            return audioCtx;
+        }
+
+        function playSound(type) {
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                if (type === 'correct') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, ctx.currentTime); 
+                    osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.08); 
+                    osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.16); 
+                    osc.frequency.setValueAtTime(1046.50, ctx.currentTime + 0.24); 
+                    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.4);
+                } else if (type === 'incorrect') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(180, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(90, ctx.currentTime + 0.3);
+                    gain.gain.setValueAtTime(0.06, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.3);
+                } else if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(450, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.05);
+                    gain.gain.setValueAtTime(0.05, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.05);
+                }
+            } catch (e) {
+                console.log("Audio synthesized successfully.");
+            }
+        }
+
+        // --- 2. 40 FRESH FDP MATHEMATICS QUESTIONS DATABASE ---
+        const originalDatabase = [
+            // ================== ALJABAR LANGSUNG (1-20) ==================
+            {
+                id: 1,
+                type: "langsung",
+                difficulty: "Sedang",
+                question: "Sederhanakan bentuk pecahan kompleks berikut menjadi pecahan biasa paling sederhana:<br>$$\\frac{\\frac{2}{3} + \\frac{3}{4}}{\\frac{5}{6} - \\frac{1}{2}}$$ (Gunakan trik kilat pengali KPK!)",
+                options: ["$\\frac{17}{4}$", "$\\frac{15}{4}$", "$\\frac{19}{4}$", "$\\frac{13}{4}$"],
+                correct: "$\\frac{17}{4}$",
+                explanation: "Penyebut-penyebut kecilnya adalah 3, 4, 6, dan 2. KPK-nya adalah 12. Kalikan pembilang dan penyebut dengan 12:<br>$$\\frac{\\left(\\frac{2}{3} + \\frac{3}{4}\\right) \\times 12}{\\left(\\frac{5}{6} - \\frac{1}{2}\\right) \\times 12} = \\frac{8 + 9}{10 - 6} = \\frac{17}{4}$$"
+            },
+            {
+                id: 2,
+                type: "langsung",
+                difficulty: "Mudah",
+                question: "Carilah nilai konvergensi eksak dari penjumlahan desimal berulang tak berhingga berikut:<br>$$0,444... + 0,555...$$",
+                options: ["$1$", "$0,99$", "$0,9$", "$1,11$"],
+                correct: "$1$",
+                explanation: "Ubah desimal berulang ke bentuk pecahan biasa:<br>$0,444... = \\frac{4}{9}$<br>$0,555... = \\frac{5}{9}$<br>Maka penjumlahan keduanya:<br>$$\\frac{4}{9} + \\frac{5}{9} = \\frac{9}{9} = 1$$"
+            },
+            {
+                id: 3,
+                type: "langsung",
+                difficulty: "Mudah",
+                question: "Hitunglah nilai dari $37,5\\%$ dari bilangan bulat $240$.",
+                options: ["$90$", "$80$", "$100$", "$95$"],
+                correct: "$90$",
+                explanation: "Siswa cerdas menghafal bahwa $37,5\\% = \\frac{3}{8}$.<br>Maka:<br>$$\\frac{3}{8} \\times 240 = 3 \\times 30 = 90$$"
+            },
+            {
+                id: 4,
+                type: "langsung",
+                difficulty: "Sedang",
+                question: "Tentukan nilai dari penyederhanaan campuran desimal, pecahan, dan persen berikut:<br>$$0,125 + \\frac{3}{8} - 20\\%$$",
+                options: ["$\\frac{3}{10}$", "$\\frac{1}{5}$", "$\\frac{2}{5}$", "$\\frac{1}{4}$"],
+                correct: "$\\frac{3}{10}$",
+                explanation: "Ubah semua suku ke bentuk desimal:<br>$0,125 + 0,375 - 0,20$<br>$= 0,50 - 0,20 = 0,30$<br>Dalam bentuk pecahan paling sederhana: $0,30 = \\frac{30}{100} = \\frac{3}{10}$."
+            },
+            {
+                id: 5,
+                type: "langsung",
+                difficulty: "Sedang",
+                question: "Jika $\\frac{2}{5}$ dari suatu variabel bilangan bulat adalah $48$, berapakah nilai dari $15\\%$ dari bilangan bulat tersebut?",
+                options: ["$18$", "$12$", "$15$", "$20$"],
+                correct: "$18$",
+                explanation: "Misalkan bilangan tersebut adalah $x$.<br>$\\frac{2}{5}x = 48 \\Rightarrow x = 48 \\times \\frac{5}{2} = 120$.<br>Maka, $15\\%$ dari $120$ adalah:<br>$$0,15 \\times 120 = 18$$"
+            },
+            {
+                id: 6,
+                type: "langsung",
+                difficulty: "Sulit",
+                question: "Sederhanakan bentuk pecahan berlanjut bertingkat (*continued fraction*) berikut:<br>$$\\frac{1}{1 + \\frac{1}{2 + \\frac{1}{3}}}$$",
+                options: ["$0,7$", "$0,6$", "$0,8$", "$0,5$"],
+                correct: "$0,7$",
+                explanation: "Selesaikan dari tingkat paling bawah terlebih dahulu:<br>1) Penyebut paling bawah: $2 + \\frac{1}{3} = \\frac{7}{3}$.<br>2) Menjadi: $\\frac{1}{1 + \\frac{1}{7/3}} = \\frac{1}{1 + \\frac{3}{7}}$.<br>3) Selesaikan penyebut baru: $1 + \\frac{3}{7} = \\frac{10}{7}$.<br>4) Suku akhir: $\\frac{1}{10/7} = \\frac{7}{10} = 0,7$."
+            },
+            {
+                id: 7,
+                type: "langsung",
+                difficulty: "Mudah",
+                question: "Bentuk desimal yang setara dengan pecahan biasa $\\frac{9}{16}$ adalah...",
+                options: ["$0,5625$", "$0,5825$", "$0,5425$", "$0,5225$"],
+                correct: "$0,5625$",
+                explanation: "Gunakan pembagian manual bertahap:<br>$$\\frac{9}{16} = \\frac{9 \\times 625}{16 \\times 625} = \\frac{5625}{10000} = 0,5625$$"
+            },
+            {
+                id: 8,
+                type: "langsung",
+                difficulty: "Sedang",
+                question: "Hitung dan sederhanakan bentuk operasi bilangan pecahan campuran berikut:<br>$$\\frac{2,4 \\times \\frac{5}{6}}{0,4 + \\frac{1}{5}}$$",
+                options: ["$3\\frac{1}{3}$", "$3\\frac{2}{3}$", "$2\\frac{2}{3}$", "$4$"],
+                correct: "$3\\frac{1}{3}$",
+                explanation: "Selesaikan pembilang: $2,4 \\times \\frac{5}{6} = 0,4 \\times 5 = 2$.<br>Selesaikan penyebut: $0,4 + \\frac{1}{5} = 0,4 + 0,2 = 0,6 = \\frac{3}{5}$.<br>Maka hasilnya: $\\frac{2}{3/5} = 2 \\times \\frac{5}{3} = \\frac{10}{3} = 3\\frac{1}{3}$."
+            },
+            {
+                id: 9,
+                type: "langsung",
+                difficulty: "Sedang",
+                question: "Jika $p = 0,666...$ dan $q = 0,75$, berapakah nilai pembagian dari $\\frac{p}{q}$?",
+                options: ["$\\frac{8}{9}$", "$\\frac{7}{9}$", "$\\frac{3}{4}$", "$\\frac{5}{6}$"],
+                correct: "$\\frac{8}{9}$",
+                explanation: "Ubah ke pecahan biasa terlebih dahulu:<br>$p = 0,666... = \\frac{2}{3}$<br>$q = 0,75 = \\frac{3}{4}$<br>Maka $\\frac{p}{q} = \\frac{2}{3} \\div \\frac{3}{4} = \\frac{2}{3} \\times \\frac{4}{3} = \\frac{8}{9}$."
+            },
+            {
+                id: 10,
+                type: "langsung",
+                difficulty: "Mudah",
+                question: "Ubah pecahan biasa $\\frac{7}{125}$ ke dalam bentuk persentase.",
+                options: ["$5,6\\%$", "$5,4\\%$", "$5,8\\%$", "$6,2\\%$"],
+                correct: "$5,6\\%$",
+                explanation: "Kalikan pecahan dengan $100\\%$:<br>$$\\frac{7}{125} \\times 100\\% = \\frac{7 \\times 4}{5}\\% = \\frac{28}{5}\\% = 5,6\\%$$"
+            },
+            {
+                id: 11,
+                type: "langsung",
+                difficulty: "Sedang",
+                question: "Cari nilai variabel $x$ yang memenuhi persamaan berikut:<br>$$\\frac{x}{15} = 0,4666...$$",
+                options: ["$7$", "$6$", "$8$", "$9$"],
+                correct: "$7$",
+                explanation: "Misalkan $y = 0,4666... \\Rightarrow 10y = 4,666...$ dan $100y = 46,666...$.<br>Kurangkan: $90y = 42 \\Rightarrow y = \\frac{42}{90} = \\frac{7}{15}$.<br>Karena $\\frac{x}{15} = \\frac{7}{15}$, maka diperoleh nilai $x = 7$."
+            },
+            {
+                id: 12,
+                type: "langsung",
+                difficulty: "Sedang",
+                question: "Urutkan deret representasi FDP berikut dari yang nilainya paling kecil:<br>$$0,62\\ ;\\ \\frac{5}{8}\\ ;\\ 65\\%\\ ;\\ \\frac{2}{3}$$",
+                options: ["$0,62\\ ;\\ \\frac{5}{8}\\ ;\\ 65\\%\\ ;\\ \\frac{2}{3}$", "$\\frac{5}{8}\\ ;\\ 0,62\\ ;\\ 65\\%\\ ;\\ \\frac{2}{3}$", "$0,62\\ ;\\ 65\\%\\ ;\\ \\frac{5}{8}\\ ;\\ \\frac{2}{3}$", "$\\frac{2}{3}\\ ;\\ 65\\%\\ ;\\ \\frac{5}{8}\\ ;\\ 0,62$"],
+                correct: "$0,62\\ ;\\ \\frac{5}{8}\\ ;\\ 65\\%\\ ;\\ \\frac{2}{3}$",
+                explanation: "Ubah semuanya menjadi bentuk desimal:<br>• $0,62$<br>• $\\frac{5}{8} = 0,625$<br>• $65\\% = 0,65$<br>• $\\frac{2}{3} \\approx 0,667$<br>Urutan dari terkecil: $0,62 < 0,625 < 0,65 < 0,667$."
+            },
+            {
+                id: 13,
+                type: "langsung",
+                difficulty: "Sedang",
+                question: "Berapakah nilai desimal akhir dari operasi FDP campuran berikut:<br>$$\\frac{2^2}{5} + 35\\% - 0,15$$",
+                options: ["$1,0$", "$0,9$", "$1,1$", "$1,2$"],
+                correct: "$1,0$",
+                explanation: "Sederhanakan suku pertama: $\\frac{4}{5} = 0,8$.<br>Suku kedua: $35\\% = 0,35$.<br>Maka perhitungannya adalah:<br>$0,8 + 0,35 - 0,15 = 1,15 - 0,15 = 1,0$."
+            },
+            {
+                id: 14,
+                type: "langsung",
+                difficulty: "Sulit",
+                question: "Sederhanakan pecahan aljabar bertingkat berikut:<br>$$\\frac{\\frac{3}{4} - \\frac{1}{3}}{1 + \\frac{1}{4} \\times \\frac{1}{3}}$$",
+                options: ["$\\frac{5}{13}$", "$\\frac{7}{13}$", "$\\frac{5}{12}$", "$\\frac{7}{12}$"],
+                correct: "$\\frac{5}{13}$",
+                explanation: "Selesaikan pembilang: $\\frac{3}{4} - \\frac{1}{3} = \\frac{9 - 4}{12} = \\frac{5}{12}$.<br>Selesaikan penyebut: $1 + \\frac{1}{12} = \\frac{13}{12}$.<br>Maka pembagiannya menjadi: $\\frac{5/12}{13/12} = \\frac{5}{13}$."
+            },
+            {
+                id: 15,
+                type: "langsung",
+                difficulty: "Mudah",
+                question: "Hitunglah nilai eksak dari $125\\%$ dari pecahan biasa $\\frac{4}{5}$.",
+                options: ["$1$", "$1,2$", "$0,8$", "$1,5$"],
+                correct: "$1$",
+                explanation: "Ubah persentase menjadi pecahan biasa:<br>$125\\% = \\frac{125}{100} = \\frac{5}{4}$.<br>Maka hasil perkaliannya adalah:<br>$$\\frac{5}{4} \\times \\frac{4}{5} = 1$$"
+            },
+            {
+                id: 16,
+                type: "langsung",
+                difficulty: "Sedang",
+                question: "Jika $a = \\frac{1}{2}$, $b = 0,25$, dan $c = 40\\%$. Tentukan nilai dari operasi aljabar $\\frac{a \\times b}{c}$ dalam bentuk pecahan biasa.",
+                options: ["$\\frac{5}{16}$", "$\\frac{3}{16}$", "$\\frac{7}{16}$", "$\\frac{1}{4}$"],
+                correct: "$\\frac{5}{16}$",
+                explanation: "Ubah semua suku menjadi pecahan biasa:<br>$a = \\frac{1}{2}$, $b = \\frac{1}{4}$, $c = \\frac{2}{5}$.<br>Pembilang: $a \\times b = \\frac{1}{2} \\times \\frac{1}{4} = \\frac{1}{8}$.<br>Maka: $\\frac{1/8}{2/5} = \\frac{1}{8} \\times \\frac{5}{2} = \\frac{5}{16}$."
+            },
+            {
+                id: 17,
+                type: "langsung",
+                difficulty: "Sedang",
+                question: "Tentukan bentuk pecahan biasa paling sederhana dari nilai desimal $0,1125$.",
+                options: ["$\\frac{9}{80}$", "$\\frac{11}{80}$", "$\\frac{7}{80}$", "$\\frac{3}{40}$"],
+                correct: "$\\frac{9}{80}$",
+                explanation: "Tulis dalam bentuk per-sepuluh-ribu:<br>$$0,1125 = \\frac{1125}{10000}$$<br>Bagi pembilang dan penyebut dengan FPB mereka yaitu 125:<br>$$\\frac{1125 \\div 125}{10000 \\div 125} = \\frac{9}{80}$$"
+            },
+            {
+                id: 18,
+                type: "langsung",
+                difficulty: "Mudah",
+                question: "Berapakah nilai desimal dari pembagian desimal dengan pecahan berikut:<br>$$\\frac{0,375}{\\frac{5}{8}}$$",
+                options: ["$0,6$", "$0,5$", "$0,7$", "$0,8$"],
+                correct: "$0,6$",
+                explanation: "Siswa cerdas mengetahui bahwa $0,375 = \\frac{3}{8}$.<br>Maka pembagiannya:<br>$$\\frac{3}{8} \\div \\frac{5}{8} = \\frac{3}{5} = 0,6$$"
+            },
+            {
+                id: 19,
+                type: "langsung",
+                difficulty: "Sedang",
+                question: "Sederhanakan bentuk pengurangan pecahan bertingkat berikut:<br>$$\\frac{1}{\\frac{3}{4}} - \\frac{1}{\\frac{4}{3}}$$",
+                options: ["$\\frac{7}{12}$", "$\\frac{5}{12}$", "$\\frac{11}{12}$", "$\\frac{1}{12}$"],
+                correct: "$\\frac{7}{12}$",
+                explanation: "Balikkan kedua suku pembagi pecahan:<br>$$\\frac{4}{3} - \\frac{3}{4} = \\frac{16 - 9}{12} = \\frac{7}{12}$$"
+            },
+            {
+                id: 20,
+                type: "langsung",
+                difficulty: "Mudah",
+                question: "Berapakah nilai bulat dari persentase pecahan berikut:<br>$$66\\frac{2}{3}\\% \\text{ dari } 90$$",
+                options: ["$60$", "$45$", "$30$", "$75$"],
+                correct: "$60$",
+                explanation: "Siswa cerdas memahami bahwa $66\\frac{2}{3}\\% = \\frac{2}{3}$ bagian.<br>Maka perkaliannya adalah:<br>$$\\frac{2}{3} \\times 90 = 2 \\times 30 = 60$$"
+            },
+
+            // ================== SOAL CERITA (21-40) ==================
+            {
+                id: 21,
+                type: "cerita",
+                difficulty: "Sedang",
+                question: "Ibu memiliki minyak goreng di dapur. Di hari pertama dipakai $\\frac{1}{3}$ bagian. Di hari kedua, Ibu memakai $25\\%$ <span class='underline'>dari sisa minyak goreng</span> tersebut. Jika sisa minyak goreng Ibu sekarang adalah $3 \\text{ liter}$, berapakah kapasitas awal minyak goreng Ibu mula-mula?",
+                options: ["$6 \\text{ liter}$", "$8 \\text{ liter}$", "$5 \\text{ liter}$", "$9 \\text{ liter}$"],
+                correct: "$6 \\text{ liter}$",
+                explanation: "Sisa hari pertama: $1 - \\frac{1}{3} = \\frac{2}{3}$ bagian.<br>Hari kedua dipakai: $25\\% = \\frac{1}{4}$ dari sisa, artinya menyisakan $\\frac{3}{4}$ dari sisa hari pertama.<br>Sisa akhir bagian: $\\frac{3}{4} \\times \\frac{2}{3} = \\frac{1}{2}$ bagian.<br>Karena $\\frac{1}{2} \\text{ kapasitas} = 3 \\text{ liter}$, maka kapasitas awal $= 6 \\text{ liter}$."
+            },
+            {
+                id: 22,
+                type: "cerita",
+                difficulty: "Sedang",
+                question: "Di dalam laboratorium kimia, asisten laboratorium mencampurkan $200 \\text{ mL}$ larutan gula dengan konsentrasi $10\\%$ dengan $300 \\text{ mL}$ larutan gula konsentrasi $20\\%$. Berapakah persentase konsentrasi gula akhir pada campuran tersebut?",
+                options: ["$16\\%$", "$15\\%$", "$18\\%$", "$14\\%$"],
+                correct: "$16\\%$",
+                explanation: "Massa gula 1: $10\\% \\times 200 = 20 \\text{ mL}$.<br>Massa gula 2: $20\\% \\times 300 = 60 \\text{ mL}$.<br>Total massa gula $= 20 + 60 = 80 \\text{ mL}$.<br>Total volume cairan $= 200 + 300 = 500 \\text{ mL}$.<br>Konsentrasi akhir: $\\frac{80}{500} = \\frac{16}{100} = 16\\%$."
+            },
+            {
+                id: 23,
+                type: "cerita",
+                difficulty: "Sedang",
+                question: "Sepotong pakaian mendapatkan diskon ganda (*double discounts*) sebesar $30\\% + 20\\%$. Jika seorang pelanggan membayar pakaian tersebut sebesar Rp112.000,00 setelah diskon bertingkat diterapkan, berapakah harga asli pakaian tersebut sebelum didiskon?",
+                options: ["Rp200.000,00", "Rp180.000,00", "Rp220.000,00", "Rp250.000,00"],
+                correct: "Rp200.000,00",
+                explanation: "Misalkan harga asli $= H$.<br>Harga setelah diskon 1: $0,70H$.<br>Harga setelah diskon 2: $0,80 \\times 0,70H = 0,56H$.<br>Persamaan: $0,56H = 112.000 \\Rightarrow H = \\frac{112.000}{0,56} = \\text{Rp200.000,00}$."
+            },
+            {
+                id: 24,
+                type: "cerita",
+                difficulty: "Sedang",
+                question: "Andi dapat menyelesaikan pengecatan dinding kamar tidur dalam waktu $4 \\text{ jam}$, sedangkan Budi membutuhkan waktu $6 \\text{ jam}$ untuk tugas yang sama. Jika mereka bekerja bersama-sama secara kolaboratif selama $1 \\text{ jam}$, berapakah sisa bagian dinding yang belum dicat?",
+                options: ["$\\frac{7}{12}$", "$\\frac{5}{12}$", "$\\frac{1}{2}$", "$\\frac{2}{3}$"],
+                correct: "$\\frac{7}{12}$",
+                explanation: "Laju kerja Andi $= \\frac{1}{4}$ bagian/jam, Budi $= \\frac{1}{6}$ bagian/jam.<br>Laju gabungan: $\\frac{1}{4} + \\frac{1}{6} = \\frac{5}{12}$ bagian/jam.<br>Dalam waktu 1 jam, bagian yang telah dicat adalah $\\frac{5}{12}$ bagian.<br>Maka sisa bagian yang belum selesai dicat: $1 - \\frac{5}{12} = \\frac{7}{12}$ bagian."
+            },
+            {
+                id: 25,
+                type: "cerita",
+                difficulty: "Sedang",
+                question: "Pak Budi membagi gaji bulannya secara terencana. Sebanyak $40\\%$ ia alokasikan untuk kebutuhan pokok, dan $\\frac{1}{4}$ bagian dari sisa uangnya digunakan untuk biaya pendidikan anak. Jika sisa uang gaji Pak Budi kini adalah Rp1.800.000,00, berapakah total gaji bulanan Pak Budi?",
+                options: ["Rp4.000.000,00", "Rp4.500.000,00", "Rp3.600.000,00", "Rp5.000.000,00"],
+                correct: "Rp4.000.000,00",
+                explanation: "Alokasi pokok $= 40\\%. Sisa pertama $= 60\\%$.<br>Biaya pendidikan $= \\frac{1}{4} \\times 60\\% = 15\\%$.<br>Sisa akhir gajinya: $60\\% - 15\\% = 45\\%$.<br>Persamaan: $45\\% \\times \\text{Gaji} = 1.800.000 \\Rightarrow \\text{Gaji} = \\frac{1.800.000}{0,45} = \\text{Rp4.000.000,00}$."
+            },
+            {
+                id: 26,
+                type: "cerita",
+                difficulty: "Sulit",
+                question: "Suatu logam paduan tembaga seberat $200 \\text{ gram}$ memiliki kadar kandungan tembaga murni sebesar $25\\%$. Berapa gram tembaga murni yang harus ditambahkan ke logam paduan tersebut agar kadarnya meningkat menjadi $40\\%$?",
+                options: ["$50 \\text{ gram}$", "$40 \\text{ gram}$", "$60 \\text{ gram}$", "$45 \\text{ gram}$"],
+                correct: "$50 \\text{ gram}$",
+                explanation: "Tembaga murni awal $= 25\\% \\times 200 = 50 \\text{ gram}$.<br>Misalkan ditambah tembaga murni sebanyak $x$ gram.<br>Persamaan kadar baru: $\\frac{50 + x}{200 + x} = 40\\% = \\frac{2}{5}$.<br>Kalikan silang: $250 + 5x = 400 + 2x \\Rightarrow 3x = 150 \\Rightarrow x = 50 \\text{ gram}$."
+            },
+            {
+                id: 27,
+                type: "cerita",
+                difficulty: "Sedang",
+                question: "Nilai investasi portofolio saham seseorang mengalami kenaikan harga sebesar $20\\%$ pada tahun pertama, namun mengalami susut nilai atau penurunan sebesar $15\\%$ pada tahun kedua. Berapa total persentase perubahan nilai investasi akhir terhadap nilai modal awal?",
+                options: ["Naik $2\\%$", "Turun $5\\%$", "Naik $5\\%$", "Tetap $0\\%$"],
+                correct: "Naik $2\\%$",
+                explanation: "Misalkan modal awal adalah $100$.<br>Akhir tahun ke-1 menjadi: $100 + 20\\% = 120$.<br>Akhir tahun ke-2 turun $15\\%$ dari 120: $120 - (15\\% \\times 120) = 120 - 18 = 102$.<br>Perubahan terhadap modal awal: $102 - 100 = 2$ (Naik $2\\%$)."
+            },
+            {
+                id: 28,
+                type: "cerita",
+                difficulty: "Sedang",
+                question: "Sebuah botol terisi sirup sebanyak $\\frac{3}{5}$ bagian. Setelah sirup dituangkan sebanyak $150 \\text{ mL}$ untuk disajikan kepada tamu, isi botol sirup kini menyisakan $35\\%$. Berapakah kapasitas penuh botol sirup tersebut?",
+                options: ["$600 \\text{ mL}$", "$500 \\text{ mL}$", "$750 \\text{ mL}$", "$800 \\text{ mL}$"],
+                correct: "$600 \\text{ mL}$",
+                explanation: "Ubah $\\frac{3}{5}$ ke persentase: $\\frac{3}{5} = 60\\%$.<br>Selisih persentase isi sebelum dan sesudah dituangkan: $60\\% - 35\\% = 25\\%$.<br>Karena $25\\% \\text{ kapasitas} = 150 \\text{ mL}$, maka kapasitas penuh $= 150 \\times 4 = 600 \\text{ mL}$."
+            },
+            {
+                id: 29,
+                type: "cerita",
+                difficulty: "Sedang",
+                question: "Suatu kelas terdiri dari siswa laki-laki dan perempuan. Jika $\\frac{3}{5}$ bagian dari total siswa kelas tersebut adalah siswa perempuan, dan diketahui pula bahwa $40\\%$ dari seluruh siswa laki-laki memakai kacamata, berapakah persentase siswa laki-laki berkacamata dari total siswa di kelas tersebut?",
+                options: ["$16\\%$", "$24\\%$", "$20\\%$", "$12\\%$"],
+                correct: "$16\\%$",
+                explanation: "Bagian siswa perempuan $= \\frac{3}{5} = 60\\%$.<br>Maka bagian siswa laki-laki $= 100\\% - 60\\% = 40\\%$.<br>Siswa laki-laki berkacamata dari total kelas: $40\\% \\text (laju kacamata) \\times 40\\% \\text (proporsi laki-laki) = 16\\%$."
+            },
+            {
+                id: 30,
+                type: "cerita",
+                difficulty: "Sedang",
+                question: "Seorang pedagang membeli suatu barang dengan harga Rp150.000,00. Ia menjual kembali barang tersebut dengan mengharapkan keuntungan bersih sebesar $12,5\\%$. Berapakah harga jual barang tersebut?",
+                options: ["Rp168.750,00", "Rp165.000,00", "Rp170.000,00", "Rp162.500,00"],
+                correct: "Rp168.750,00",
+                explanation: "Nilai persentase $12,5\\%$ setara dengan pecahan $\\frac{1}{8}$.<br>Keuntungan bersih: $\\frac{1}{8} \\times 150.000 = \\text{Rp18.750,00}$.<br>Harga Jual $=$ Harga Beli $+$ Keuntungan $= 150.000 + 18.750 = \\text{Rp168.750,00}$."
+            },
+            {
+                id: 31,
+                type: "cerita",
+                difficulty: "Mudah",
+                question: "Dua tahun yang lalu, tinggi badan seorang anak adalah $120 \\text{ cm}$. Sekarang, tinggi badannya diukur dan mengalami kenaikan sebesar $15\\%$. Berapakah tinggi badan anak tersebut sekarang?",
+                options: ["$138 \\text{ cm}$", "$135 \\text{ cm}$", "$132 \\text{ cm}$", "$140 \\text{ cm}$"],
+                correct: "$138 \\text{ cm}$",
+                explanation: "Besar pertambahan tinggi badan: $15\\% \\times 120 = 18 \\text{ cm}$.<br>Tinggi badan anak sekarang: $120 + 18 = 138 \\text{ cm}$."
+            },
+            {
+                id: 32,
+                type: "cerita",
+                difficulty: "Mudah",
+                question: "Sebuah tangki solar berisi $\\frac{2}{3}$ bagian. Jika ditambahkan solar sebanyak $120 \\text{ liter}$ lagi ke dalamnya, tangki tersebut terisi penuh utuh. Berapakah kapasitas penuh tangki solar tersebut?",
+                options: ["$360 \\text{ liter}$", "$240 \\text{ liter}$", "$480 \\text{ liter}$", "$300 \\text{ liter}$"],
+                correct: "$360 \\text{ liter}$",
+                explanation: "Sisa ruang kosong pada tangki: $1 - \\frac{2}{3} = \\frac{1}{3}$ bagian.<br>Karena $\\frac{1}{3} \\text{ kapasitas} = 120 \\text{ liter}$, maka kapasitas penuh $= 120 \\times 3 = 360 \\text{ liter}$."
+            },
+            {
+                id: 33,
+                type: "cerita",
+                difficulty: "Sedang",
+                question: "Harga sebuah tiket maskapai penerbangan mengalami kenaikan tarif musiman sebesar $25\\%$. Namun setelah liburan usai, pihak maskapai memberikan diskon promosi sebesar $20\\%$. Bagaimana persentase perubahan harga tiket akhir dibanding harga mula-mula?",
+                options: ["Tidak berubah ($0\\%$)", "Naik $5\\%$", "Turun $5\\%$", "Naik $2,5\\%$"],
+                correct: "Tidak berubah ($0\\%$)",
+                explanation: "Misalkan harga tiket mula-mula $= 100$.<br>Setelah naik $25\\%$, harga menjadi $125$.<br>Didiskon $20\\%$ setelah kenaikan: $125 - (20\\% \\times 125) = 125 - 25 = 100$.<br>Harga kembali ke nilai semula (tidak mengalami perubahan, atau $0\\%$)."
+            },
+            {
+                id: 34,
+                type: "cerita",
+                difficulty: "Sedang",
+                question: "Dari seluruh siswa peserta ujian matematika, $15\\%$ mendapatkan nilai A, $\\frac{3}{5}$ bagian mendapatkan nilai B, dan sisanya sebanyak $20 \\text{ orang}$ mendapatkan nilai C. Berapakah jumlah total seluruh peserta ujian matematika tersebut?",
+                options: ["$80 \\text{ orang}$", "$100 \\text{ orang}$", "$75 \\text{ orang}$", "$120 \\text{ orang}$"],
+                correct: "$80 \\text{ orang}$",
+                explanation: "Proporsi Nilai A $= 15\\%$.<br>Proporsi Nilai B $= \\frac{3}{5} = 60\\%$.<br>Maka proporsi Nilai C adalah: $100\\% - (15\\% + 60\\%) = 25\\%$.<br>Karena $25\\% \\text{ total} = 20 \\text{ orang}$, maka total peserta $= 20 \\times 4 = 80 \\text{ orang}$."
+            },
+            {
+                id: 35,
+                type: "cerita",
+                difficulty: "Sedang",
+                question: "Budi menabung uang sebesar Rp2.000.000,00 di koperasi dengan sistem bunga tunggal $6\\%$ per tahun. Berapakah jumlah total uang tabungan Budi setelah mengendap selama $10 \\text{ bulan}$?",
+                options: ["Rp2.100.000,00", "Rp2.120.000,00", "Rp2.080.000,00", "Rp2.060.000,00"],
+                correct: "Rp2.100.000,00",
+                explanation: "Bunga bulanan selama 10 bulan: $\\frac{10}{12} \\times 6\\% = 5\\%$.<br>Besar bunga diperoleh: $5\\% \\times 2.000.000 = \\text{Rp100.000,00}$.<br>Total tabungan akhir Budi: $2.000.000 + 100.000 = \\text{Rp2.100.000,00}$."
+            },
+            {
+                id: 36,
+                type: "cerita",
+                difficulty: "Mudah",
+                question: "Suatu paduan logam kuningan dibentuk oleh campuran logam tembaga dan seng dengan rasio massa $3 : 2$. Berapa persen kadar kandungan tembaga dalam kuningan tersebut?",
+                options: ["$60\\%$", "$40\\%$", "$50\\%$", "$75\\%$"],
+                correct: "$60\\%$",
+                explanation: "Bagian tembaga dari total campuran: $\\frac{3}{3 + 2} = \\frac{3}{5}$.<br>Ubah pecahan menjadi persentase: $\\frac{3}{5} \\times 100\\% = 60\\%$."
+            },
+            {
+                id: 37,
+                type: "cerita",
+                difficulty: "Sulit",
+                question: "Seorang petani memanen padi. Sebanyak $\\frac{5}{8}$ bagian dari hasil panen dijual ke tengkulak, dan $40\\%$ <span class='underline'>dari sisanya</span> disimpan untuk konsumsi sendiri. Jika sisa hasil panen yang belum teralokasikan adalah $1,35 \\text{ ton}$, berapakah total hasil panen padi petani?",
+                options: ["$6 \\text{ ton}$", "$5 \\text{ ton}$", "$8 \\text{ ton}$", "$7,2 \\text{ ton}$"],
+                correct: "$6 \\text{ ton}$",
+                explanation: "Sisa setelah dijual: $1 - \\frac{5}{8} = \\frac{3}{8} = 37,5\\%$.<br>Disimpan untuk konsumsi: $40\\% \\times 37,5\\% = 15\\%$.<br>Sisa akhir yang belum dialokasikan: $37,5\\% - 15\\% = 22,5\\% = \\frac{9}{40}$ bagian.<br>Persamaan: $\\frac{9}{40} \\times \\text{Total} = 1,35 \\Rightarrow \\text{Total} = 1,35 \\times \\frac{40}{9} = 0,15 \\times 40 = 6 \\text{ ton}$."
+            },
+            {
+                id: 38,
+                type: "cerita",
+                difficulty: "Mudah",
+                question: "Dalam sebuah ujian sertifikasi profesi, seorang peserta berhasil menjawab dengan benar $32$ soal dari total $40$ soal yang diujikan. Berapakah persentase nilai ujian peserta tersebut?",
+                options: ["$80\\%$", "$75\\%$", "$85\\%$", "$90\\%$"],
+                correct: "$80\\%$",
+                explanation: "Persentase nilai dihitung dengan membagi jawaban benar dengan jumlah soal:<br>$$\\frac{32}{40} \\times 100\\% = \\frac{4}{5} \\times 100\\% = 80\\%$$"
+            },
+            {
+                id: 39,
+                type: "cerita",
+                difficulty: "Sedang",
+                question: "Harga sebuah tas kulit mula-mula adalah Rp300.000,00. Karena akhir tahun, tas didiskon $30\\%$. Jika pembeli menunjukkan kupon VIP member, ia berhak mendapatkan tambahan diskon sebesar $10\\%$ lagi <span class='underline'>dari harga setelah diskon pertama</span>. Berapakah uang yang harus dibayarkan pembeli?",
+                options: ["Rp189.000,00", "Rp180.000,00", "Rp210.000,00", "Rp195.000,00"],
+                correct: "Rp189.000,00",
+                explanation: "Harga setelah diskon pertama: $70\\% \\times 300.000 = \\text{Rp210.000,00}$.<br>Harga setelah diskon tambahan VIP member: $90\\% \\times 210.000 = \\text{Rp189.000,00}$."
+            },
+            {
+                id: 40,
+                type: "cerita",
+                difficulty: "Sulit",
+                question: "Di sebuah toko buah, perbandingan stok buah mangga dengan jeruk adalah $3 : 5$. Jika diketahui $25\\%$ dari total mangga dan $20\\%$ dari total jeruk adalah buah yang belum matang, berapakah persentase total buah yang sudah matang di toko tersebut?",
+                options: ["$78,125\\%$", "$75\\%$", "$80\\%$", "$76,25\\%$"],
+                correct: "$78,125\\%$",
+                explanation: "Asumsikan stok mangga $= 300$ dan jeruk $= 500$ (total $= 800$ buah).<br>• Mangga matang: $(100\\% - 25\\%) \\times 300 = 75\\% \\times 300 = 225$ buah.<br>• Jeruk matang: $(100\\% - 20\\%) \\times 500 = 80\\% \\times 500 = 400$ buah.<br>• Total buah matang $= 225 + 400 = 625$ buah.<br>• Persentase total matang: $\\frac{625}{800} \\times 100\\% = 78,125\\%$."
+            }
+        ];
+
+        // --- 3. SYSTEM STATE MACHINE ---
+        let selectedCategory = 'langsung';
+        let questions = [];
+        let currentIndex = 0;
+        let scoreXp = 0;
+        let streak = 0;
+        let correctCount = 0;
+        let incorrectQuestionsList = [];
+
+        // --- 4. ENGINE INITIALIZATION ---
+        function startQuiz(category) {
+            playSound('click');
+            selectedCategory = category;
+            currentIndex = 0;
+            scoreXp = 0;
+            streak = 0;
+            correctCount = 0;
+            incorrectQuestionsList = [];
+
+            let rawQuestions = [];
+            if (category === 'marathon') {
+                rawQuestions = [...originalDatabase];
+            } else {
+                rawQuestions = originalDatabase.filter(q => q.type === category);
+            }
+
+            questions = rawQuestions.map(q => JSON.parse(JSON.stringify(q)));
+
+            // Shuffle first to ensure randomized presentation within same difficulty tiers
+            shuffleArray(questions);
+
+            // Re-order strictly ascending by difficulty tiers: Mudah -> Sedang -> Sulit
+            const difficultyMap = { 'Mudah': 1, 'Sedang': 2, 'Sulit': 3 };
+            questions.sort((a, b) => difficultyMap[a.difficulty] - difficultyMap[b.difficulty]);
+
+            // Update UI
+            document.getElementById('score-display').innerText = `${scoreXp} XP`;
+            document.getElementById('streak-count').innerText = `${streak}`;
+            document.getElementById('streak-badge').classList.add('hidden');
+            document.getElementById('section-name').innerText = `Kategori: ${category === 'langsung' ? 'Soal Langsung' : category === 'cerita' ? 'Soal Cerita' : 'Marathon Akbar'}`;
+
+            document.getElementById('intro-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+
+            loadQuestion();
+        }
+
+        // Shuffle Utility Function
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // --- 5. RENDER NAVIGATION SIDEBAR GRID ---
+        function renderNavGrid() {
+            const navGrid = document.getElementById('nav-grid');
+            navGrid.innerHTML = '';
+            
+            questions.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                btn.innerText = idx + 1;
+                
+                let btnClass = "w-9 h-9 md:w-10 md:h-10 rounded-xl font-extrabold text-xs transition flex items-center justify-center border-2 ";
+                
+                if (idx === currentIndex) {
+                    btnClass += "border-teal-600 bg-teal-50 text-teal-700 ring-2 ring-teal-300 ring-offset-1";
+                } else if (q.isAnswered) {
+                    if (q.userIsCorrect) {
+                        btnClass += "border-emerald-500 bg-emerald-50 text-emerald-700 hover:bg-emerald-100";
+                    } else {
+                        btnClass += "border-red-400 bg-red-50 text-red-700 hover:bg-red-100";
+                    }
+                } else {
+                    btnClass += "border-slate-200 bg-white hover:bg-slate-100 text-slate-600";
+                }
+                
+                btn.className = btnClass;
+                btn.onclick = () => {
+                    playSound('click');
+                    currentIndex = idx;
+                    loadQuestion();
+                };
+                navGrid.appendChild(btn);
+            });
+
+            // Update mini progress stats
+            const answeredCount = questions.filter(q => q.isAnswered).length;
+            document.getElementById('stat-answered-count').innerText = `${answeredCount} / ${questions.length}`;
+            const pct = (answeredCount / questions.length) * 100;
+            document.getElementById('stat-answered-progress').style.width = `${pct}%`;
+        }
+
+        // --- 6. RENDER ACTIVE QUESTION SLIDE ---
+        function loadQuestion() {
+            if (currentIndex >= questions.length) {
+                endQuiz();
+                return;
+            }
+
+            const currentQ = questions[currentIndex];
+
+            // Render navigation state
+            renderNavGrid();
+
+            // Setup header metadata and progress bar
+            document.getElementById('question-index').innerText = `SOAL ${currentIndex + 1} / ${questions.length}`;
+            const percent = ((currentIndex) / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${percent}%`;
+
+            // Difficulty badges
+            const diffBadge = document.getElementById('difficulty-badge');
+            diffBadge.innerText = currentQ.difficulty;
+            if (currentQ.difficulty === 'Mudah') {
+                diffBadge.className = "px-3 py-1 rounded-full text-[10px] font-black uppercase shadow-sm bg-emerald-100 text-emerald-800";
+            } else if (currentQ.difficulty === 'Sedang') {
+                diffBadge.className = "px-3 py-1 rounded-full text-[10px] font-black uppercase shadow-sm bg-amber-100 text-amber-800";
+            } else {
+                diffBadge.className = "px-3 py-1 rounded-full text-[10px] font-black uppercase shadow-sm bg-red-100 text-red-800";
+            }
+
+            // Inject raw question
+            document.getElementById('question-text').innerHTML = currentQ.question;
+
+            // Generate options (preserving shuffled order once generated for consistency)
+            const optionsContainer = document.getElementById('options-grid');
+            optionsContainer.innerHTML = '';
+
+            if (!currentQ.shuffledOptions) {
+                currentQ.shuffledOptions = [...currentQ.options];
+                shuffleArray(currentQ.shuffledOptions);
+            }
+
+            currentQ.shuffledOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 bg-slate-50 hover:bg-slate-100 border-2 border-slate-200 rounded-2xl text-xs md:text-sm font-bold text-slate-800 transition active:scale-[0.98] flex justify-between items-center group";
+                
+                let actionText = "PILIH";
+
+                if (currentQ.isAnswered) {
+                    btn.disabled = true;
+                    if (opt === currentQ.selectedOption) {
+                        if (currentQ.userIsCorrect) {
+                            btn.className = "w-full text-left p-4 border-2 rounded-2xl text-xs md:text-sm font-bold transition flex justify-between items-center border-emerald-500 bg-emerald-50 text-emerald-900";
+                            actionText = "BENAR! 🎉";
+                        } else {
+                            btn.className = "w-full text-left p-4 border-2 rounded-2xl text-xs md:text-sm font-bold transition flex justify-between items-center border-red-400 bg-red-50 text-red-900";
+                            actionText = "SALAH ❌";
+                        }
+                    } else if (opt === currentQ.correct) {
+                        btn.className = "w-full text-left p-4 border-2 rounded-2xl text-xs md:text-sm font-bold transition flex justify-between items-center border-emerald-500 bg-emerald-50 text-emerald-900 opacity-90";
+                        actionText = "KUNCI JAWABAN";
+                    } else {
+                        btn.className = "w-full text-left p-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-xs md:text-sm font-bold text-slate-800 opacity-40 flex justify-between items-center";
+                        actionText = "";
+                    }
+                }
+
+                btn.innerHTML = `<span>${opt}</span><span class="${currentQ.isAnswered ? 'text-[10px] bg-white px-2 py-1 rounded-lg font-extrabold' : 'opacity-0 group-hover:opacity-100 text-[10px] bg-teal-100 text-teal-700 px-2 py-1 rounded-lg transition font-extrabold uppercase'}">${actionText}</span>`;
+                
+                if (!currentQ.isAnswered) {
+                    btn.onclick = () => selectOption(btn, opt, currentQ);
+                }
+                optionsContainer.appendChild(btn);
+            });
+
+            // Adjust explanation visual
+            const explanationBox = document.getElementById('explanation-box');
+            const explanationText = document.getElementById('explanation-text');
+            const nextBtn = document.getElementById('next-btn');
+
+            if (currentQ.isAnswered) {
+                explanationText.innerHTML = currentQ.explanation;
+                explanationBox.classList.remove('hidden');
+                nextBtn.classList.remove('hidden');
+                if (currentIndex === questions.length - 1) {
+                    nextBtn.innerHTML = `Selesai Kuis <span>🏆</span>`;
+                } else {
+                    nextBtn.innerHTML = `Lanjutkan <span>👉</span>`;
+                }
+            } else {
+                explanationBox.classList.add('hidden');
+                nextBtn.classList.add('hidden');
+                nextBtn.innerHTML = `Lanjutkan <span>👉</span>`;
+            }
+
+            // Trigger MathJax typeset
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        // --- 7. PROCESS VALUE SELECTION ---
+        function selectOption(btnElement, selectedOpt, questionObj) {
+            const grid = document.getElementById('options-grid');
+            
+            Array.from(grid.children).forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add('opacity-50');
+            });
+
+            const isCorrect = selectedOpt === questionObj.correct;
+
+            // Save Answer state onto question object instance
+            questionObj.isAnswered = true;
+            questionObj.selectedOption = selectedOpt;
+            questionObj.userIsCorrect = isCorrect;
+
+            if (isCorrect) {
+                btnElement.classList.remove('opacity-50', 'bg-slate-50', 'border-slate-200');
+                btnElement.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-900');
+                btnElement.querySelector('span:last-child').className = "text-[10px] bg-emerald-100 text-emerald-800 px-2 py-1 rounded-lg font-extrabold uppercase opacity-100";
+                btnElement.querySelector('span:last-child').innerText = "BENAR! 🎉";
+
+                playSound('correct');
+                correctCount++;
+                
+                streak++;
+                document.getElementById('streak-count').innerText = `${streak}`;
+                if (streak >= 3) {
+                    document.getElementById('streak-badge').classList.remove('hidden');
+                }
+
+                let awardedXp = 15;
+                if (streak >= 5) awardedXp += 5;
+                scoreXp += awardedXp;
+                document.getElementById('score-display').innerText = `${scoreXp} XP`;
+
+                showToast(`✨ Luar biasa! +${awardedXp} XP diperoleh.`, 'bg-emerald-600');
+                triggerConfetti();
+            } else {
+                btnElement.classList.remove('opacity-50', 'bg-slate-50', 'border-slate-200');
+                btnElement.classList.add('border-red-400', 'bg-red-50', 'text-red-900');
+                btnElement.querySelector('span:last-child').className = "text-[10px] bg-red-100 text-red-800 px-2 py-1 rounded-lg font-extrabold uppercase opacity-100";
+                btnElement.querySelector('span:last-child').innerText = "SALAH ❌";
+
+                playSound('incorrect');
+                
+                streak = 0;
+                document.getElementById('streak-badge').classList.add('hidden');
+
+                incorrectQuestionsList.push(questionObj);
+
+                showToast(`💡 Kurang tepat. Cek pembahasan di bawah!`, 'bg-red-500');
+            }
+
+            const explanationBox = document.getElementById('explanation-box');
+            const explanationText = document.getElementById('explanation-text');
+            explanationText.innerHTML = questionObj.explanation;
+            explanationBox.classList.remove('hidden');
+
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.classList.remove('hidden');
+            if (currentIndex === questions.length - 1) {
+                nextBtn.innerHTML = `Selesai Kuis <span>🏆</span>`;
+            } else {
+                nextBtn.innerHTML = `Lanjutkan <span>👉</span>`;
+            }
+
+            // Immediately refresh nav indicator styling
+            renderNavGrid();
+
+            if (window.MathJax) {
+                MathJax.typesetPromise([grid, explanationBox]);
+            }
+        }
+
+        // --- 8. SEQUENTIAL AND BOUNDARY CHECKS ---
+        function nextQuestion() {
+            playSound('click');
+            if (currentIndex < questions.length - 1) {
+                currentIndex++;
+                loadQuestion();
+            } else {
+                // Check if there are unanswered questions
+                const unansweredCount = questions.filter(q => !q.isAnswered).length;
+                if (unansweredCount > 0) {
+                    if (confirm(`Kamu memiliki ${unansweredCount} soal yang terlewat (belum dijawab). Tetap ingin menyelesaikan kuis sekarang?`)) {
+                        endQuiz();
+                    }
+                } else {
+                    endQuiz();
+                }
+            }
+        }
+
+        // --- 9. RESULTS PAGE TRIGGER ---
+        function endQuiz() {
+            playSound('correct');
+            triggerConfetti();
+
+            document.getElementById('progress-bar').style.width = `100%`;
+            document.getElementById('quiz-screen').classList.add('hidden');
+            
+            // Render metrics
+            document.getElementById('stat-correct').innerText = `${correctCount} / ${questions.length}`;
+            const accuracy = Math.round((correctCount / questions.length) * 100);
+            document.getElementById('stat-accuracy').innerText = `${accuracy}%`;
+            document.getElementById('stat-xp').innerText = `${scoreXp} XP`;
+
+            const resultEmoji = document.getElementById('result-emoji');
+            const resultTitle = document.getElementById('result-title');
+            const resultMsg = document.getElementById('result-message');
+
+            if (accuracy === 100) {
+                resultEmoji.innerText = "👑🥇";
+                resultTitle.innerText = "Sempurna! FDP Grandmaster";
+                resultMsg.innerText = "Pemahaman konseptual, perhitungan aljabar biasa, dan pemodelan sisa berantai kamu sangat luar biasa!";
+            } else if (accuracy >= 75) {
+                resultEmoji.innerText = "🌟💪";
+                resultTitle.innerText = "Detektif Berbakat!";
+                resultMsg.innerText = "Luar biasa! Pemahaman konsep pecahan desimal dan pemodelan persen kamu sudah sangat matang.";
+            } else {
+                resultEmoji.innerText = "🌿📖";
+                resultTitle.innerText = "Terus Berlatih!";
+                resultMsg.innerText = "Kerja bagus! Sedikit pengulangan pada kalkulasi pecahan kompleks akan membuatmu semakin tangguh.";
+            }
+
+            const reviewBtn = document.getElementById('review-btn');
+            if (incorrectQuestionsList.length > 0) {
+                reviewBtn.classList.remove('hidden');
+            } else {
+                reviewBtn.classList.add('hidden');
+            }
+
+            document.getElementById('results-screen').classList.remove('hidden');
+        }
+
+        function reviewIncorrectQuestions() {
+            playSound('click');
+            questions = [...incorrectQuestionsList];
+            currentIndex = 0;
+            correctCount = 0;
+            incorrectQuestionsList = [];
+            
+            document.getElementById('results-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            
+            showToast("🔍 Memulai sesi evaluasi perbaikan!", "bg-teal-600");
+            loadQuestion();
+        }
+
+        function resetPortal() {
+            playSound('click');
+            document.getElementById('results-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('intro-screen').classList.remove('hidden');
+        }
+
+        // --- 10. FLOATING TOAST NOTIFICATION ---
+        function showToast(text, bgClass) {
+            const toast = document.getElementById('toast');
+            const toastText = document.getElementById('toast-text');
+            toast.className = `fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 text-white font-extrabold px-6 py-3 rounded-2xl shadow-xl flex items-center gap-2 animate-bounce ${bgClass}`;
+            toastText.innerHTML = text;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 4500);
+        }
+
+        // --- 11. INTERACTIVE SKETCHPAD (PAPAN CAKAR) ---
+        const scratchpad = document.getElementById('scratchpad');
+        const canvas = document.getElementById('scratch-canvas');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+        let brushColor = '#0d9488'; // default teal
+
+        function toggleScratchpad() {
+            playSound('click');
+            scratchpad.classList.toggle('hidden');
+            if (!scratchpad.classList.contains('hidden')) {
+                resizeCanvas();
+            }
+        }
+
+        function resizeCanvas() {
+            const parent = canvas.parentNode;
+            canvas.width = parent.clientWidth;
+            canvas.height = parent.clientHeight;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.lineWidth = 3.5;
+            ctx.strokeStyle = brushColor;
+        }
+
+        function setCanvasColor(color) {
+            playSound('click');
+            brushColor = color;
+            ctx.strokeStyle = color;
+        }
+
+        function clearCanvas() {
+            playSound('click');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // Scratchpad drawing events
+        canvas.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+            ctx.beginPath();
+            const r = canvas.getBoundingClientRect();
+            ctx.moveTo(e.clientX - r.left, e.clientY - r.top);
+        });
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isDrawing) return;
+            const r = canvas.getBoundingClientRect();
+            ctx.lineTo(e.clientX - r.left, e.clientY - r.top);
+            ctx.stroke();
+        });
+        window.addEventListener('mouseup', () => isDrawing = false);
+
+        // Mobile touch events for Scratchpad
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            isDrawing = true;
+            ctx.beginPath();
+            const t = e.touches[0];
+            const r = canvas.getBoundingClientRect();
+            ctx.moveTo(t.clientX - r.left, t.clientY - r.top);
+        });
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if (!isDrawing) return;
+            const t = e.touches[0];
+            const r = canvas.getBoundingClientRect();
+            ctx.lineTo(t.clientX - r.left, t.clientY - r.top);
+            ctx.stroke();
+        });
+        canvas.addEventListener('touchend', () => isDrawing = false);
+
+
+        // --- 12. CONFETTI CELEBRATION SYSTEM ---
+        const confettiCanvas = document.getElementById('confetti');
+        const confettiCtx = confettiCanvas.getContext('2d');
+        let confettiActive = false;
+        let particles = [];
+
+        function triggerConfetti() {
+            confettiActive = true;
+            confettiCanvas.classList.remove('hidden');
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+            
+            particles = [];
+            for (let i = 0; i < 65; i++) {
+                particles.push({
+                    x: Math.random() * confettiCanvas.width,
+                    y: Math.random() * confettiCanvas.height - confettiCanvas.height,
+                    r: Math.random() * 5 + 4,
+                    d: Math.random() * confettiCanvas.height,
+                    color: `hsl(${Math.random() * 360}, 90%, 65%)`,
+                    tilt: Math.random() * 10 - 5,
+                    tiltAngleIncremental: Math.random() * 0.08 + 0.02,
+                    tiltAngle: 0
+                });
+            }
+
+            animateConfetti();
+            setTimeout(() => {
+                confettiActive = false;
+                confettiCanvas.classList.add('hidden');
+            }, 2000);
+        }
+
+        function animateConfetti() {
+            if (!confettiActive) return;
+            confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            
+            particles.forEach((p, idx) => {
+                p.tiltAngle += p.tiltAngleIncremental;
+                p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2;
+                p.x += Math.sin(p.tiltAngle);
+                p.tilt = Math.sin(p.tiltAngle - idx / 3) * 15;
+
+                confettiCtx.beginPath();
+                confettiCtx.lineWidth = p.r;
+                confettiCtx.strokeStyle = p.color;
+                confettiCtx.moveTo(p.x + p.tilt + p.r / 2, p.y);
+                confettiCtx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2);
+                confettiCtx.stroke();
+            });
+
+            requestAnimationFrame(animateConfetti);
+        }
+    </script>
+</body>
+</html>
